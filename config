@@ -1,0 +1,26 @@
+ngx_feature_name=
+ngx_feature_run=no
+ngx_feature_incs="#include <cconv.h>"
+ngx_feature_test="cconv_open"
+
+# auto-discovery
+ngx_feature="libcconv library"
+ngx_feature_path=
+ngx_feature_libs="-lcconv"
+. auto/feature
+
+if [ $ngx_found = no ]; then
+    # Debian
+    ngx_feature="libcconv library in /usr/local/"
+    ngx_feature_path="/usr/local/include/"
+    ngx_feature_libs="/usr/local/lib/"
+    . auto/feature
+fi
+
+ngx_addon_name=ngx_http_set_cconv_module
+HTTP_AUX_FILTER_MODULES="$HTTP_AUX_FILTER_MODULES ngx_http_set_cconv_module"
+NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/src/ngx_http_set_cconv.c $ngx_addon_dir/src/ngx_http_set_cconv_module.c"
+NGX_ADDON_DEPS="$NGX_ADDON_DEPS $ngx_addon_dir/src/ddebug.h $ngx_addon_dir/src/ngx_http_set_cconv.h"
+
+CFLAGS="$CFLAGS -DNDK_SET_VAR"
+

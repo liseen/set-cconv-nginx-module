@@ -1,0 +1,149 @@
+Name
+    ngx_set_cconv - cconv rewrite set commands
+
+    *This module is not distributed with the Nginx source.* See the
+    installation instructions.
+
+Status
+    This module is production ready.
+
+Synopsis
+    location /foo {
+        set $foo "中國";
+        set_cconv_to_simp $foo $foo;
+        # now $foo is 中国
+    }
+
+    location /bar {
+        set $foo "中国";
+        set_cconv_to_trad $foo $foo;
+        # now $foo is 中國
+    }
+
+Description
+  Every directive provided by this module can be
+  mixed freely with other nginx rewrite module's
+  directives, like "if" and "set". (Thanks to NDK
+  and agentzh's set-misc-nginx-module)
+
+  Only utf8 is supported in this module.
+
+Directives
+  set_cconv_to_simp
+
+  set_cconv_to_trad
+
+Caveats
+    Do not use $arg_XXX or $http_XXX or other special variables defined in
+    the nginx core module as the target variable in this module's directives.
+    For instance,
+
+        set_cconv_to_simp $arg_user 'foo';  # DO NOT USE THIS!
+
+    will lead to data corruption.
+
+Installation
+    First ensure you have openssl installed in your system.
+
+    1. Grab the nginx source code from nginx.net (<http://nginx.net/ >), for
+        example, the version 0.8.29 (see nginx compatibility),
+
+    2. Grab the NDK module from GitHub:
+        http://github.com/simpl-it/ngx_devel_kit
+
+    3. and then build the source with this module:
+
+        $ wget 'http://sysoev.ru/nginx/nginx-0.8.29.tar.gz'
+        $ tar -xzvf nginx-0.8.29.tar.gz
+        $ cd nginx-0.8.29/
+
+        # Here we assume you would install you nginx under /opt/nginx/.
+        $ ./configure --prefix=/opt/nginx \
+            --with-ld-opt="-lcconv" \
+            --add-module=/path/to/ngx_devel_kit \
+            --add-module=/path/to/set-cconv-nginx-module
+
+        $ make -j2
+        $ make install
+
+    Download the latest version of the release tarball of this module from
+    set-cconv-nginx-module file list
+    (<http://github.com/liseen/set-cconv-nginx-module/downloads >).
+
+Compatibility
+    The following versions of Nginx should work with this module:
+
+    *   0.8.x (last tested version is 0.8.38)
+
+    *   0.7.x >= 0.7.46 (last tested version is 0.7.65)
+
+    Earlier versions of Nginx like 0.6.x and 0.5.x will *not* work.
+
+    If you find that any particular version of Nginx above 0.7.44 does not
+    work with this module, please consider reporting a bug.
+
+Report Bugs
+    Although a lot of effort has been put into testing and code tuning,
+    there must be some serious bugs lurking somewhere in this module. So
+    whenever you are bitten by any quirks, please don't hesitate to
+
+    1.  send a bug report or even patches to <liseen.wan@gmail.com>,
+
+    2.  or create a ticket on the issue tracking interface
+        (<http://github.com/liseen/set-cconv-nginx-module/issues >)
+        provided by GitHub.
+
+Source Repository
+    Available on github at liseen/set-cconv-nginx-module
+    (<http://github.com/liseen/set-cconv-nginx-module >).
+
+ChangeLog
+
+Test Suite
+    This module comes with a Perl-driven test suite. The test cases
+    (<http://github.com/liseen/set-cconv-nginx-module/tree/master/test/t/ >)
+    are declarative
+    (<http://github.com/liseen/set-cconv-nginx-module/blob/master/test/t/sanity.t >
+    ) too. Thanks to the Test::Base
+    (<http://search.cpan.org/perldoc?Test::Base >) module in the Perl world.
+
+    To run it on your side:
+
+        $ cd test
+        $ PATH=/path/to/your/nginx-with-set-cconv-module:$PATH prove -r t
+
+    You need to terminate any Nginx processes before running the test suite
+    if you have changed the Nginx server binary.
+
+    Test::Nginx (<http://search.cpan.org/perldoc?Test::Nginx >) is used by
+    the test scaffold.
+
+    Because a single nginx server (by default, "localhost:1984") is used
+    across all the test scripts (".t" files), it's meaningless to run the
+    test suite in parallel by specifying "-jN" when invoking the "prove"
+    utility.
+
+    Some parts of the test suite requires modules rewrite, and echo
+    to be enabled as well when building Nginx.
+
+TODO
+
+Getting involved
+    You'll be very welcomed to submit patches to the author or just ask for
+    a commit bit to the source repository on GitHub.
+
+Author
+    liseen.wan (万珣新) *<liseen.wan@gmail.com>*
+    agentzh (章亦春) *<agentzh@gmail.com>*
+
+Copyright & License
+    Copyright (c) 2010, Qunar Inc. ( http://www.qunar.com).
+
+    Copyright (c) 2009, liseen <liseen.wan@gmail.com>.
+
+    This module is licensed under the terms of the GPL2 license.
+
+See Also
+    NDK: http://github.com/simpl-it/ngx_devel_kit
+    set-misc: http://github.com/agentzh/set-misc-nginx-module
+
