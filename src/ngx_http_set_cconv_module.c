@@ -3,6 +3,7 @@
 
 #include <ndk.h>
 #include "ngx_http_set_cconv.h"
+#include "ngx_http_set_pinyin.h"
 
 
 static  ndk_set_var_t  ngx_http_set_cconv_to_cn_str_filter = {
@@ -15,6 +16,13 @@ static  ndk_set_var_t  ngx_http_set_cconv_to_cn_str_filter = {
 static  ndk_set_var_t  ngx_http_set_cconv_to_tw_str_filter = {
     NDK_SET_VAR_VALUE,
     ngx_http_set_cconv_to_tw_str,
+    1,
+    NULL
+};
+
+static  ndk_set_var_t  ngx_http_set_pinyin_to_normal_filter = {
+    NDK_SET_VAR_VALUE,
+    ngx_http_set_pinyin_to_normal,
     1,
     NULL
 };
@@ -38,6 +46,15 @@ static ngx_command_t  ngx_http_set_cconv_commands[] = {
         0,
         0,
         &ngx_http_set_cconv_to_tw_str_filter
+    },
+    {
+        ngx_string ("set_pinyin_to_normal"),
+        NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_SIF_CONF
+            |NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF|NGX_CONF_TAKE12,
+        ndk_set_var_value,
+        0,
+        0,
+        &ngx_http_set_pinyin_to_normal_filter
     },
 
     ngx_null_command

@@ -20,6 +20,13 @@ Synopsis
         # now $foo is 中國
     }
 
+    location /baz {
+        set $foo "西ｚｈｉMen";
+        set_pinyin_to_normal $foo $foo;
+        # now $foo is xizhimen
+    }
+
+
 Description
   Every directive provided by this module can be
   mixed freely with other nginx rewrite module's
@@ -32,6 +39,8 @@ Directives
   set_cconv_to_simp
 
   set_cconv_to_trad
+
+  set_pinyin_to_normal
 
 Caveats
     Do not use $arg_XXX or $http_XXX or other special variables defined in
