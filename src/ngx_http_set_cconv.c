@@ -61,6 +61,12 @@ ngx_http_set_cconv_escape_to_cn_str(u_char *dst, u_char *src, size_t size)
        return (uintptr_t) (-1);
     }
 
+    // a cconv bug
+    if (size == 3 && ngx_strncmp(src, "乾", 3) == 0) {
+        ngx_memcpy(dst, src, 3);
+        return (uintptr_t)(dst + 3);
+    }
+
 #ifdef FreeBSD
     ret = cconv(to_cconv, (const char**)&src, &inlen, (char**)&dst, &outlen);
 #else

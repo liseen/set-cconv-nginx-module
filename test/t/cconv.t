@@ -60,7 +60,20 @@ GET /foo
 GET /foo
 --- response_body
 
-=== TEST 5: set cconv to traditional
+=== TEST 5: set cconv to simp 乾
+--- config
+    location /foo {
+        set $foo "乾";
+        set_cconv_to_simp $foo;
+        echo $foo;
+    }
+--- request
+GET /foo
+--- response_body
+乾
+
+
+=== TEST 6: set cconv to traditional
 --- config
     location /foo {
         set $foo "中国";
